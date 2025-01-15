@@ -28,7 +28,6 @@ permissions:
 
 env:
   AWS_REGION              : ${{ vars.aws_region }}
-  GH_TOKEN                : ${{ secrets.TOKEN_ACTIONS}}
   AWS_ROLE                : ${{ secrets.AWS_ROLE }}
 
 

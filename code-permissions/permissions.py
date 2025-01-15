@@ -7,10 +7,10 @@ lakeformation = boto3.client('lakeformation')
 
 # Parámetros de configuración
 role_arn = os.getenv['ROLE_ARN']
-lf_tags = os.getenv['LF_TAGS']
-permissions = os.getenv["PERMISSIONS"]
-permissions_with_grant_option = os.getenv["PERMISSIONS_WITH_GRANT_OPTION"]
-
+lf_tags = json.loads(os.getenv['LF_TAGS'])
+permissions = json.loads(os.getenv["PERMISSIONS"])
+permissions_with_grant_option = json.loads(os.getenv["PERMISSIONS_WITH_GRANT_OPTION"])
+resource_type = os.getenv['RESOURCE_TYPE']
 try:
     # Crea la política para otorgar permisos utilizando LF-tags
     response = lakeformation.grant_permissions(
@@ -20,8 +20,8 @@ try:
         Resource={
             'LFTagPolicy': {
                 'CatalogId': '123456789012',  # Reemplaza con tu ID de cuenta de AWS
-                'ResourceType': os.getenv["RESOURCE_TYPE"],     # Cambia a 'DATABASE' si deseas aplicar a bases de datos
-                'Expression': json.loads(lf_tags)
+                'ResourceType': resource_type ,     # Cambia a 'DATABASE' si deseas aplicar a bases de datos
+                'Expression': lf_tags
             }
         },
         Permissions=permissions,
