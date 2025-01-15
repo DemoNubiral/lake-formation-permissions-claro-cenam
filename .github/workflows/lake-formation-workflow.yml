@@ -66,7 +66,7 @@ jobs:
           for file in ${{ steps.changed-create-files.outputs.all_changed_files }}; do
             cp -r $file variable-process
           done
-          ls -la
+          ls -la ./variable-process/
           
       - uses: actions/setup-python@v5
         with:
@@ -79,7 +79,7 @@ jobs:
 
       - name: load env vars
         run: |
-          ls -la
+          ls -la ./variable-process/
           archivo=$(ls variable-process | head -n 1)
           echo "$archivo"
           source $archivo
