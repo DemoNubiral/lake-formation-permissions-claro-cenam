@@ -33,7 +33,7 @@ env:
 
 jobs:
   lake-formation-permissions:
-    environment: dev
+    environment: main
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code with full history
