@@ -19,7 +19,7 @@ try:
         },
         Resource={
             'LFTagPolicy': {
-                'CatalogId': '123456789012',  # Reemplaza con tu ID de cuenta de AWS
+                'CatalogId': '015319782619',  # Reemplaza con tu ID de cuenta de AWS
                 'ResourceType': resource_type ,     # Cambia a 'DATABASE' si deseas aplicar a bases de datos
                 'Expression': lf_tags
             }
