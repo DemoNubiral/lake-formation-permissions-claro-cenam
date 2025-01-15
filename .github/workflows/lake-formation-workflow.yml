@@ -82,7 +82,7 @@ jobs:
           ls -la ./variable-process/
           archivo=$(ls variable-process | head -n 1)
           echo "$archivo"
-          source $archivo
+          source "$archivo"
 
       - name: Run the Lake Formation permissions script
         run: |
