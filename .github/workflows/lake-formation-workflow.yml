@@ -87,7 +87,7 @@ jobs:
       - name: Run the Lake Formation permissions script
         run: |
           ls -la
-          python3 code-permissions/code_permissions.py 
+          python3 code-permissions/permissions.py 
 
 
       
