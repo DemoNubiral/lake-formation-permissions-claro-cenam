@@ -82,7 +82,7 @@ jobs:
           ls -la ./variable-process/
           archivo=$(ls variable-process | head -n 1)
           echo "$archivo"
-          cat ./variable-process/'$archivo' >> $GITHUB_ENV
+          cat ./variable-process/"$archivo" >> $GITHUB_ENV
           ##echo "./variable-process/'$archivo'" >> $GITHUB_ENV
 
       - name: Run the Lake Formation permissions script
