@@ -6,15 +6,19 @@ lakeformation = boto3.client('lakeformation')
 
 
 # Parámetros de configuración
-role_arn = os.getenv('ROLE_ARN')
-lf_tags_str = os.getenv('LF_TAGS')
+role_arn = os.getenv("ROLE_ARN")
 permissions_str = os.getenv("PERMISSIONS")
 permissions_with_grant_option_str = os.getenv("PERMISSIONS_WITH_GRANT_OPTION")
-resource_type = os.getenv('RESOURCE_TYPE')
+resource_type = os.getenv("RESOURCE_TYPE")
+lf_tags_str = os.getenv("LF_TAGS")
 
-lf_tags = json.loads(lf_tags_str)
-permissions = json.loads(permissions_str)
+print(lf_tags_str)
+print(permissions_str)
+print(permissions_with_grant_option_str)
+
 permissions_with_grant_option = json.loads(permissions_with_grant_option_str)
+permissions = json.loads(permissions_str)
+lf_tags = json.loads(lf_tags_str)
 try:
     # Crea la política para otorgar permisos utilizando LF-tags
     response = lakeformation.grant_permissions(
