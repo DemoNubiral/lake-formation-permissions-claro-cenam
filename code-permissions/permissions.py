@@ -95,6 +95,7 @@ if __name__ == '__main__':
     catalog_id = os.getenv("CATALOG_ID")
     database_name = os.getenv("DATABASE_NAME")
     table_name = os.getenv("TABLE_NAME")
+
     flag_permissions = os.getenv("FLAG_PERMISSIONS")
 
     # Transforma los valores de las variables de entorno a listas
@@ -113,7 +114,9 @@ if __name__ == '__main__':
                               catalog_id,
                               database_name,
                               table_name)
-    
+    print("----------------------------")
+    print("Se inicia la ejecución del script")
+    print("----------------------------")
     if flag_permissions == 'create_lf_tags':
         response = permissions.create_lf_tags()
     elif flag_permissions == 'assign_lf_tags':
@@ -126,5 +129,9 @@ if __name__ == '__main__':
         print(response)
         print("----------------------------")
         exit(1)
+
+    print("----------------------------")
+    print("Se finaliza la ejecución del script")
+    print("----------------------------")
 
 

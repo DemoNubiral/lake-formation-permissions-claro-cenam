@@ -75,7 +75,6 @@ jobs:
   
       - name: Install Python requests
         run: |
-          pip install pytz
           pip install boto3
 
       - name: load env vars
@@ -85,6 +84,15 @@ jobs:
           echo "$archivo"
           cat ./variable-process/"$archivo" >> $GITHUB_ENV
           ##echo "./variable-process/'$archivo'" >> $GITHUB_ENV
+
+      - name: print env vars
+        run: |
+          echo $PRINCIPAL_ARN
+          echo $PERMISSIONS
+          echo $PERMISSIONS_GRANT_OPTION
+          echo $LF_TAGS
+          echo $RESOURCE_TYPE
+          echo $FLAG_PERMISSIONS
 
       - name: Run the Lake Formation permissions script
         run: |
