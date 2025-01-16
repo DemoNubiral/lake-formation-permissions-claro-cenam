@@ -98,6 +98,11 @@ if __name__ == '__main__':
 
     flag_permissions = os.getenv("FLAG_PERMISSIONS")
 
+    print(lf_tags_str)
+    print(permissions_str)
+    print(permissions_with_grant_option_str)
+    print(tag_values_str)
+
     # Transforma los valores de las variables de entorno a listas
     lf_tags = json.loads(lf_tags_str)
     permissions = json.loads(permissions_str)
