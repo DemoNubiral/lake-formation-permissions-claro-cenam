@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - dev
     paths:
       - 'code-permissions/**'
       - 'table-permissions/**'
@@ -33,7 +34,7 @@ env:
 
 jobs:
   lake-formation-permissions:
-    environment: main
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code with full history

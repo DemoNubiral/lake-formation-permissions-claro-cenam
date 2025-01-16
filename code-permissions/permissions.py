@@ -83,40 +83,6 @@ class Permissions:
             return str(e)
 
 
-<<<<<<< HEAD
-# Parámetros de configuración
-role_arn = os.getenv("ROLE_ARN")
-permissions_str = os.getenv("PERMISSIONS")
-permissions_with_grant_option_str = os.getenv("PERMISSIONS_WITH_GRANT_OPTION")
-resource_type = os.getenv("RESOURCE_TYPE")
-lf_tags_str = os.getenv("LF_TAGS")
-
-print(lf_tags_str)
-print(permissions_str)
-print(permissions_with_grant_option_str)
-
-permissions_with_grant_option = json.loads(permissions_with_grant_option_str)
-permissions = json.loads(permissions_str)
-lf_tags = json.loads(lf_tags_str)
-try:
-    # Crea la política para otorgar permisos utilizando LF-tags
-    response = lakeformation.grant_permissions(
-        Principal={
-            'DataLakePrincipalIdentifier': role_arn
-        },
-        Resource={
-            'LFTagPolicy': {
-                'CatalogId': '015319782619',  # Reemplaza con tu ID de cuenta de AWS
-                'ResourceType': resource_type ,     # Cambia a 'DATABASE' si deseas aplicar a bases de datos
-                'Expression': lf_tags
-            }
-        },
-        Permissions=permissions,
-        PermissionsWithGrantOption=permissions_with_grant_option
-    )
-=======
->>>>>>> 1567c61 (MOD: se modifica scrpit)
-
 if __name__ == '__main__':
     # Parámetros de configuración
     role_arn = os.getenv("ROLE_ARN")
