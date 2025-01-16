@@ -2,6 +2,7 @@ import boto3
 import os
 import json
 
+
 class Permissions:
     def __init__(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, tag_key, tag_values, catalog_id, database_name, table_name):
         self.role_arn = role_arn
@@ -86,9 +87,9 @@ class Permissions:
 if __name__ == '__main__':
     # Parámetros de configuración
     role_arn = os.getenv("ROLE_ARN")
-    lf_tags_str = os.getenv("LF_TAGS")
-    permissions_str = os.getenv("PERMISSIONS")
-    permissions_with_grant_option_str = os.getenv("PERMISSIONS_WITH_GRANT_OPTION")
+    lf_tags_str = os.getenv('LF_TAGS')
+    permissions_str = os.getenv('PERMISSIONS')
+    permissions_with_grant_option_str = os.getenv('PERMISSIONS_WITH_GRANT_OPTION')
     resource_type = os.getenv("RESOURCE_TYPE")
     tag_key = os.getenv("TAG_KEY")
     tag_values_str = os.getenv("TAG_VALUES")
@@ -98,16 +99,17 @@ if __name__ == '__main__':
 
     flag_permissions = os.getenv("FLAG_PERMISSIONS")
 
+    print(flag_permissions)
     print(lf_tags_str)
     print(permissions_str)
     print(permissions_with_grant_option_str)
     print(tag_values_str)
 
     # Transforma los valores de las variables de entorno a listas
-    lf_tags = json.loads(lf_tags_str)
-    permissions = json.loads(permissions_str)
-    permissions_with_grant_option = json.loads(permissions_with_grant_option_str)
-    tag_values = json.loads(tag_values_str)
+    lf_tags = "" if lf_tags_str == None else json.loads(lf_tags_str)
+    permissions = "" if permissions_str == None else json.loads(permissions_str)
+    permissions_with_grant_option = "" if permissions_with_grant_option_str == None else json.loads(permissions_with_grant_option_str)
+    tag_values = "" if tag_values_str == None else json.loads(tag_values_str)
 
     permissions = Permissions(role_arn, 
                               lf_tags, 
@@ -123,10 +125,19 @@ if __name__ == '__main__':
     print("Se inicia la ejecución del script")
     print("----------------------------")
     if flag_permissions == 'create_lf_tags':
+        print("----------------------------")
+        print("create_lf_tags")
+        print("----------------------------")
         response = permissions.create_lf_tags()
     elif flag_permissions == 'assign_lf_tags':
+        print("----------------------------")
+        print("assign_lf_tags")
+        print("----------------------------")
         response = permissions.assign_lf_tags()
     elif flag_permissions == 'grant_permissions':
+        print("----------------------------")
+        print("grant_permissions")
+        print("----------------------------")
         response = permissions.grant_permissions()
     else:
         response = 'Invalid flag_permissions'

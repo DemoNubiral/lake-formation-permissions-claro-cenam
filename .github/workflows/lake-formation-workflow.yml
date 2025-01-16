@@ -76,6 +76,7 @@ jobs:
       - name: Install Python requests
         run: |
           pip install boto3
+          pip install python-dotenv
 
       - name: load env vars
         run: |
