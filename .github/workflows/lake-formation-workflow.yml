@@ -80,11 +80,19 @@ jobs:
 
       - name: load env vars
         run: |
-          ls -la ./variable-process/
+          # ls -la ./variable-process/
+          # archivo=$(ls variable-process | head -n 1)
+          # echo "$archivo"
+          # cat ./variable-process/"$archivo" >> $GITHUB_ENV
+          # ##echo "./variable-process/'$archivo'" >> $GITHUB_ENV
+
           archivo=$(ls variable-process | head -n 1)
-          echo "$archivo"
-          cat ./variable-process/"$archivo" >> $GITHUB_ENV
-          ##echo "./variable-process/'$archivo'" >> $GITHUB_ENV
+          echo "Archivo detectado: $archivo"
+          while IFS= read -r line; do
+            if [[ ! -z "$line" ]]; then
+              echo "$line" >> $GITHUB_ENV
+            fi
+          done < ./variable-process/"$archivo"
 
       - name: print env vars
         run: |
