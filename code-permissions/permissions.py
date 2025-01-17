@@ -101,11 +101,13 @@ if __name__ == '__main__':
 
     flag_permissions = os.getenv("FLAG_PERMISSIONS")
 
-    print(flag_permissions)
+    print(type(flag_permissions))
+    print(type(lf_tags_str))
     print(lf_tags_str)
-    print(permissions_str)
-    print(permissions_with_grant_option_str)
-    print(tag_values_str)
+    print(type(permissions_str))
+    print(type(permissions_with_grant_option_str))
+    print(type(tag_values_str))
+
 
     # Transforma los valores de las variables de entorno a listas
     lf_tags = "" if lf_tags_str == None else json.loads(lf_tags_str)
