@@ -84,44 +84,54 @@ class Permissions:
             return response
         except Exception as e:
             return str(e)
+        
+    
+    def read_file_env(self, path_file):
+        file = open(path_file, 'r')
+        env_data = {}
+        for line in file:
+            if not line.strip() or line.startswith("#"):
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip("'").strip('"')
+            env_data[key] = value
+        return env_data
 
 
 if __name__ == '__main__':
-    path_file = os.getenv("PATH_FILE")
-    print(path_file)
-    data = open(path_file, 'r')
-    read_data = data.read()
-    print(read_data)
-    print(type(read_data))
-    print(read_data.split("="))
+    path_file = os.getenv("PATH_FILE")   
+    # Parámetros de configuración
+    # role_arn = os.getenv("ROLE_ARN")
+    # lf_tags_str = os.getenv('LF_TAGS')
+    # permissions_str = os.getenv('PERMISSIONS')
+    # permissions_with_grant_option_str = os.getenv('PERMISSIONS_WITH_GRANT_OPTION')
+    # resource_type = os.getenv("RESOURCE_TYPE")
+    # tag_key = os.getenv("TAG_KEY")
+    # tag_values_str = os.getenv("TAG_VALUES")
+    # catalog_id = os.getenv("CATALOG_ID")
+    # database_name = os.getenv("DATABASE_NAME")
+    # table_name = os.getenv("TABLE_NAME")
 
     # Parámetros de configuración
-    role_arn = os.getenv("ROLE_ARN")
-    lf_tags_str = os.getenv('LF_TAGS')
-    permissions_str = os.getenv('PERMISSIONS')
-    permissions_with_grant_option_str = os.getenv('PERMISSIONS_WITH_GRANT_OPTION')
-    resource_type = os.getenv("RESOURCE_TYPE")
-    tag_key = os.getenv("TAG_KEY")
-    tag_values_str = os.getenv("TAG_VALUES")
-    catalog_id = os.getenv("CATALOG_ID")
-    database_name = os.getenv("DATABASE_NAME")
-    table_name = os.getenv("TABLE_NAME")
+    role_arn = "" 
+    lf_tags = "" 
+    permissions = "" 
+    permissions_with_grant_option = "" 
+    resource_type = "" 
+    tag_key = "" 
+    tag_values = "" 
+    catalog_id = "" 
+    database_name = "" 
+    table_name = "" 
 
     flag_permissions = os.getenv("FLAG_PERMISSIONS")
 
-    print(type(flag_permissions))
-    print(type(lf_tags_str))
-    print(lf_tags_str)
-    print(type(permissions_str))
-    print(type(permissions_with_grant_option_str))
-    print(type(tag_values_str))
-
-
-    # Transforma los valores de las variables de entorno a listas
-    lf_tags = "" if lf_tags_str == None else json.loads(lf_tags_str)
-    permissions = "" if permissions_str == None else json.loads(permissions_str)
-    permissions_with_grant_option = "" if permissions_with_grant_option_str == None else json.loads(permissions_with_grant_option_str)
-    tag_values = "" if tag_values_str == None else json.loads(tag_values_str)
+    # # Transforma los valores de las variables de entorno a listas
+    # lf_tags = "" if lf_tags_str == None else json.loads(lf_tags_str)
+    # permissions = "" if permissions_str == None else json.loads(permissions_str)
+    # permissions_with_grant_option = "" if permissions_with_grant_option_str == None else json.loads(permissions_with_grant_option_str)
+    # tag_values = "" if tag_values_str == None else json.loads(tag_values_str)
 
     permissions = Permissions(role_arn, 
                               lf_tags, 
@@ -133,33 +143,36 @@ if __name__ == '__main__':
                               catalog_id,
                               database_name,
                               table_name)
-    print("----------------------------")
-    print("Se inicia la ejecución del script")
-    print("----------------------------")
-    if flag_permissions == 'create_lf_tags':
-        print("----------------------------")
-        print("create_lf_tags")
-        print("----------------------------")
-        response = permissions.create_lf_tags()
-    elif flag_permissions == 'assign_lf_tags':
-        print("----------------------------")
-        print("assign_lf_tags")
-        print("----------------------------")
-        response = permissions.assign_lf_tags()
-    elif flag_permissions == 'grant_permissions':
-        print("----------------------------")
-        print("grant_permissions")
-        print("----------------------------")
-        response = permissions.grant_permissions()
-    else:
-        response = 'Invalid flag_permissions'
-        print("----------------------------")
-        print(response)
-        print("----------------------------")
-        exit(1)
+    
+    data = permissions.read_file_env(path_file)
+    print(data)
+    # print("----------------------------")
+    # print("Se inicia la ejecución del script")
+    # print("----------------------------")
+    # if flag_permissions == 'create_lf_tags':
+    #     print("----------------------------")
+    #     print("create_lf_tags")
+    #     print("----------------------------")
+    #     response = permissions.create_lf_tags()
+    # elif flag_permissions == 'assign_lf_tags':
+    #     print("----------------------------")
+    #     print("assign_lf_tags")
+    #     print("----------------------------")
+    #     response = permissions.assign_lf_tags()
+    # elif flag_permissions == 'grant_permissions':
+    #     print("----------------------------")
+    #     print("grant_permissions")
+    #     print("----------------------------")
+    #     response = permissions.grant_permissions()
+    # else:
+    #     response = 'Invalid flag_permissions'
+    #     print("----------------------------")
+    #     print(response)
+    #     print("----------------------------")
+    #     exit(1)
 
-    print("----------------------------")
-    print("Se finaliza la ejecución del script")
-    print("----------------------------")
+    # print("----------------------------")
+    # print("Se finaliza la ejecución del script")
+    # print("----------------------------")
 
 
