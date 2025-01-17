@@ -85,7 +85,7 @@ jobs:
           echo "$archivo"
           cat ./variable-process/"$archivo" >> $GITHUB_ENV
           PATH_FILES="./variable-process/$archivo"
-          echo "path_file=$PATH_FILES" >> $GITHUB_ENV
+          echo "$PATH_FILES" >> $GITHUB_ENV
 
       - name: print env vars
         run: |
@@ -95,7 +95,7 @@ jobs:
           echo $LF_TAGS
           echo $RESOURCE_TYPE
           echo $FLAG_PERMISSIONS
-          echo $path_file
+          echo $PATH_FILES
 
       - name: Run the Lake Formation permissions script
         run: |

@@ -87,7 +87,7 @@ class Permissions:
 
 
 if __name__ == '__main__':
-    path_file = os.getenv("PATH_FILE")
+    path_file = os.getenv("PATH_FILES")
     print(path_file)
     data = open(path_file, 'r')
     read_data = data.read()
