@@ -99,7 +99,7 @@ if __name__ == '__main__':
     json_data_lf_tags = json.loads(data['LF_TAGS']) if 'LF_TAGS' in data else ""
     json_data_permissions =  json.loads(data['PERMISSIONS']) if 'PERMISSIONS' in data else ""
     json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION']) if 'PERMISSIONS_WITH_GRANT_OPTION' in data else ""
-    json_data_resource_type = data['RESOUCE_TYPE'] if 'RESOURCE_TYPE' in data else ""
+    json_data_resource_type = data['RESOURCE_TYPE'] if 'RESOURCE_TYPE' in data else ""
     json_data_flag_permissions = data['FLAG_PERMISSIONS'] if 'FLAG_PERMISSIONS' in data else ""
     json_data_catalog_id = data['CATALOG_ID'] if 'CATALOG_ID' in data else ""
     json_data_tag_key = data['TAG_KEY'] if 'TAG_KEY' in data else ""
