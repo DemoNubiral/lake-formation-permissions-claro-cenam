@@ -116,6 +116,9 @@ if __name__ == '__main__':
         print("create_lf_tags")
         print("----------------------------")
         response = permissions.create_lf_tags(json_data_tag_key, json_data_tag_values)
+        print("----------------------------")
+        print(f"RESPONSE: {response}")
+        print("----------------------------")
     elif json_data_flag_permissions == 'assign_lf_tags':
         print("----------------------------")
         print("assign_lf_tags")
@@ -125,6 +128,9 @@ if __name__ == '__main__':
                                               json_data_catalog_id, 
                                               json_data_tag_key, 
                                               json_data_tag_values)
+        print("----------------------------")
+        print(f"RESPONSE: {response}")
+        print("----------------------------")
     elif json_data_flag_permissions == 'grant_permissions':
         print("----------------------------")
         print("grant_permissions")
@@ -135,6 +141,9 @@ if __name__ == '__main__':
                                                  json_data_permissions_with_grant_option, 
                                                  json_data_resource_type, 
                                                  json_data_catalog_id)
+        print("----------------------------")
+        print(f"RESPONSE: {response}")
+        print("----------------------------")
     else:
         response = 'Invalid flag_permissions'
         print("----------------------------")

@@ -90,17 +90,6 @@ jobs:
           echo "PATH_FILE=$PATH_FILES" >> $GITHUB_ENV
 
 
-      - name: print env vars
-        run: |
-          echo $ROLE_ARN
-          echo $PERMISSIONS
-          echo $PERMISSIONS_GRANT_OPTION
-          echo $LF_TAGS
-          echo $RESOURCE_TYPE
-          echo $FLAG_PERMISSIONS
-          echo $PATH_FILE
-
-
       - name: Run the Lake Formation permissions script
         run: |
           ls -la
