@@ -42,6 +42,7 @@ jobs:
         with:
           fetch-depth: 2
 
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -49,6 +50,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
       
+
       - name: Changed files
         id: changed-create-files
         uses: tj-actions/changed-files@v45
@@ -56,6 +58,7 @@ jobs:
           files: |
             ./table-permissions/*.env
             ./database-permissions/*.env
+
 
       - name: Get info data
         id: get-info-data
@@ -69,14 +72,17 @@ jobs:
           done
           ls -la ./variable-process/
           
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.6'
   
+
       - name: Install Python requests
         run: |
           pip install boto3
           pip install python-dotenv
+
 
       - name: load env vars
         run: |
@@ -85,10 +91,12 @@ jobs:
           echo "$archivo"
           cat ./variable-process/"$archivo" >> $GITHUB_ENV
 
-          ls -la ./variable-process/
 
+      - name: load path file
+          archivo=$(ls variable-process | head -n 1)
           PATH_FILES="./variable-process/$archivo"
           echo "PATH_FILE=$PATH_FILES" >> $GITHUB_ENV
+
 
       - name: print env vars
         run: |
@@ -100,6 +108,7 @@ jobs:
           echo $FLAG_PERMISSIONS
           echo $PATH_FILE
 
+          
       - name: Run the Lake Formation permissions script
         run: |
           ls -la
