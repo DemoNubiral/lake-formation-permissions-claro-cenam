@@ -1,7 +1,9 @@
 import boto3
 import os
 import json
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Permissions:
     def __init__(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, tag_key, tag_values, catalog_id, database_name, table_name):
