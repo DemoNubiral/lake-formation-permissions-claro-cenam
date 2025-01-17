@@ -3,7 +3,7 @@ import os
 import json
 from dotenv import load_dotenv
 
-load_dotenv()
+
 
 class Permissions:
     def __init__(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, tag_key, tag_values, catalog_id, database_name, table_name):
@@ -87,6 +87,14 @@ class Permissions:
 
 
 if __name__ == '__main__':
+    path_file = os.getenv("PATH_FILE")
+
+    data = open(path_file, 'r')
+    read_data = data.read()
+    print(read_data)
+    print(type(read_data))
+    print(read_data.split("="))
+
     # Parámetros de configuración
     role_arn = os.getenv("ROLE_ARN")
     lf_tags_str = os.getenv('LF_TAGS')
