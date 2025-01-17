@@ -94,7 +94,7 @@ if __name__ == '__main__':
     path_file = os.getenv("PATH_FILE")   
     permissions = Permissions(path_file)
     
-    data = permissions.read_file_env(path_file)
+    data = permissions.read_file_env()
     json_data_role_arn= data['ROLE_ARN'] if data['ROLE_ARN'] in data else ""
     json_data_lf_tags = json.loads(data['LF_TAGS']) if data['LF_TAGS'] in data else ""
     json_data_permissions =  json.loads(data['PERMISSIONS']) if data['PERMISSIONS'] in data else ""
