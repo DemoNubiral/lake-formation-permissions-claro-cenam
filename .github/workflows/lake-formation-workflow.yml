@@ -81,16 +81,7 @@ jobs:
       - name: Install Python requests
         run: |
           pip install boto3
-          pip install python-dotenv
-
-
-      - name: load env vars
-        run: |
-          ls -la ./variable-process/
-          archivo=$(ls variable-process | head -n 1)
-          echo "$archivo"
-          cat ./variable-process/"$archivo" >> $GITHUB_ENV
-
+          
 
       - name: load path file
         run: |
