@@ -95,17 +95,17 @@ if __name__ == '__main__':
     permissions = Permissions(path_file)
     
     data = permissions.read_file_env()
-    json_data_role_arn= data['ROLE_ARN'] if data['ROLE_ARN'] in data else ""
-    json_data_lf_tags = json.loads(data['LF_TAGS']) if data['LF_TAGS'] in data else ""
-    json_data_permissions =  json.loads(data['PERMISSIONS']) if data['PERMISSIONS'] in data else ""
-    json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION']) if data['PERMISSIONS_WITH_GRANT_OPTION'] in data else ""
-    json_data_resource_type = data['RESOUCE_TYPE'] if data['RESOURCE_TYPE'] in data else ""
-    json_data_flag_permissions = data['FLAG_PERMISSIONS'] if data['FLAG_PERMISSIONS'] in data else ""
-    json_data_catalog_id = data['CATALOG_ID'] if data['CATALOG_ID'] in data else ""
-    json_data_tag_key = data['TAG_KEY'] if data['TAG_KEY'] in data else ""
-    json_data_tag_values = json.loads(data['TAG_VALUES']) if data['TAG_VALUES'] in data else ""
-    json_data_database_name = data['DATABASE_NAME'] if data['DATABASE_NAME'] in data else ""
-    json_data_table_name = data['TABLE_NAME'] if data['TABLE_NAME'] in data else ""
+    json_data_role_arn= data['ROLE_ARN'] if 'ROLE_ARN' in data else ""
+    json_data_lf_tags = json.loads(data['LF_TAGS']) if 'LF_TAGS' in data else ""
+    json_data_permissions =  json.loads(data['PERMISSIONS']) if 'PERMISSIONS' in data else ""
+    json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION']) if 'PERMISSIONS_WITH_GRANT_OPTION' in data else ""
+    json_data_resource_type = data['RESOUCE_TYPE'] if 'RESOURCE_TYPE' in data else ""
+    json_data_flag_permissions = data['FLAG_PERMISSIONS'] if 'FLAG_PERMISSIONS' in data else ""
+    json_data_catalog_id = data['CATALOG_ID'] if 'CATALOG_ID' in data else ""
+    json_data_tag_key = data['TAG_KEY'] if 'TAG_KEY' in data else ""
+    json_data_tag_values = json.loads(data['TAG_VALUES']) if 'TAG_VALUES' in data else ""
+    json_data_database_name = data['DATABASE_NAME'] if 'DATABASE_NAME' in data else ""
+    json_data_table_name = data['TABLE_NAME'] if 'TABLE_NAME' in data else ""
 
 
     print("----------------------------")
