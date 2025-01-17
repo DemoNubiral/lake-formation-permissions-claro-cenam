@@ -93,6 +93,7 @@ jobs:
 
 
       - name: load path file
+        run: |
           archivo=$(ls variable-process | head -n 1)
           PATH_FILES="./variable-process/$archivo"
           echo "PATH_FILE=$PATH_FILES" >> $GITHUB_ENV
@@ -108,7 +109,7 @@ jobs:
           echo $FLAG_PERMISSIONS
           echo $PATH_FILE
 
-          
+
       - name: Run the Lake Formation permissions script
         run: |
           ls -la
