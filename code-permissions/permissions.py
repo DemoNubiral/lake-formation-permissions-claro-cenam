@@ -146,6 +146,12 @@ if __name__ == '__main__':
     
     data = permissions.read_file_env(path_file)
     print(data)
+    json_data_lf_tags = json.loads(data['LF_TAGS'])
+    json_data_permissions = json.loads(data['PERMISSIONS'])
+    json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION'])
+    print(json_data_lf_tags)
+    print(json_data_permissions)
+    print(json_data_permissions_with_grant_option)
     # print("----------------------------")
     # print("Se inicia la ejecución del script")
     # print("----------------------------")
