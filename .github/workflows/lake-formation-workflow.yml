@@ -11,6 +11,8 @@ on:
       - 'code-permissions/**'
       - 'table-permissions/**'
       - 'database-permissions/**'
+      - 'create-lf-tags/**'
+      - 'assign_lf_tags/**'
 
   workflow_dispatch:
 
