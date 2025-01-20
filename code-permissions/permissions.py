@@ -54,16 +54,9 @@ class Permissions:
                 CatalogId=catalog_id,  
                 
                 Resource={
-                    'Database': {
-                        'Name': database_name,
-                    },
                     'Table': {
                         'DatabaseName': database_name,
                         'Name': table_name,
-                    },
-                    'LFTag': {
-                        'TagKey': tag_key,
-                        'TagValues': tag_values
                     }
                 },
                 LFTags=[
