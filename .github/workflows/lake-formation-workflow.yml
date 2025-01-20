@@ -12,7 +12,7 @@ on:
       - 'table-permissions/**'
       - 'database-permissions/**'
       - 'create-lf-tags/**'
-      - 'assign_lf_tags/**'
+      - 'assign-lf-tags/**'
 
   workflow_dispatch:
 
@@ -61,7 +61,7 @@ jobs:
             ./table-permissions/*.env
             ./database-permissions/*.env
             ./create-lf-tags/*.env
-            ./assign_lf_tags/*.env
+            ./assign-lf-tags/*.env
 
 
       - name: Get info data
