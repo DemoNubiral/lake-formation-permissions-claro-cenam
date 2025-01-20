@@ -56,19 +56,23 @@ class Permissions:
                 Resource={
                     'Database': {
                         'Name': database_name,
-                        'CatalogId': catalog_id,  
                     },
                     'Table': {
                         'DatabaseName': database_name,
                         'Name': table_name,
-                        'CatalogId': catalog_id,  
                     },
-                    'LFTags': {
-                        'CatalogId': catalog_id,  
+                    'LFTag': {
                         'TagKey': tag_key,
                         'TagValues': tag_values
                     }
-                }
+                },
+                LFTags=[
+                    {
+                        'CatalogId': catalog_id,
+                        'TagKey': tag_key,
+                        'TagValues': tag_values
+                    },
+                ]
             )
 
             return response
