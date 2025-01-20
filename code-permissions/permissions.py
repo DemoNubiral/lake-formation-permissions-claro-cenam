@@ -63,7 +63,7 @@ class Permissions:
                         'Name': table_name,
                         'CatalogId': catalog_id,  
                     },
-                    'LFTag': {
+                    'LFTags': {
                         'CatalogId': catalog_id,  
                         'TagKey': tag_key,
                         'TagValues': tag_values
@@ -111,6 +111,7 @@ if __name__ == '__main__':
     print("----------------------------")
     print("Se inicia la ejecución del script")
     print("----------------------------")
+
     if json_data_flag_permissions == 'create_lf_tags':
         print("----------------------------")
         print("create_lf_tags")
