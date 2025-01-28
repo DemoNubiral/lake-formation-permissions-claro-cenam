@@ -47,26 +47,27 @@ class Permissions:
             return str(e)
         
 
-    def assign_lf_tags(self, database_name, table_name, catalog_id, tag_key, tag_values):
+    def assign_lf_tags(self, database_name, table_name, catalog_id, assign_lf_tags):
         try:
             # Asigna etiquetas LF a recursos
-            response = self.lakeformation.add_lf_tags_to_resource(
-                CatalogId=catalog_id,  
-                
-                Resource={
-                    'Table': {
-                        'DatabaseName': database_name,
-                        'Name': table_name,
-                    }
-                },
-                LFTags=[
-                    {
-                        'CatalogId': catalog_id,
-                        'TagKey': tag_key,
-                        'TagValues': tag_values
-                    },
-                ]
-            )
+            for item in assign_lf_tags:
+                    response = self.lakeformation.add_lf_tags_to_resource(
+                        CatalogId=catalog_id,  
+                        
+                        Resource={
+                            'Table': {
+                                'DatabaseName': database_name,
+                                'Name': table_name,
+                            }
+                        },
+                        LFTags=[
+                            {
+                                'CatalogId': catalog_id,
+                                'TagKey': item['TagKey'],
+                                'TagValues': item['TagValues']
+                            },
+                        ]
+                    )
 
             return response
         except Exception as e:
@@ -93,6 +94,7 @@ if __name__ == '__main__':
     
     data = permissions.read_file_env()
     json_data_role_arn= data['ROLE_ARN'] if 'ROLE_ARN' in data else ""
+    json_data_assign_lf_tags = json.loads(data['ASSIGN_TAG']) if 'ASSIGN_TAG' in data else ""
     json_data_lf_tags = json.loads(data['LF_TAGS']) if 'LF_TAGS' in data else ""
     json_data_permissions =  json.loads(data['PERMISSIONS']) if 'PERMISSIONS' in data else ""
     json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION']) if 'PERMISSIONS_WITH_GRANT_OPTION' in data else ""
@@ -124,8 +126,7 @@ if __name__ == '__main__':
         response = permissions.assign_lf_tags(json_data_database_name, 
                                               json_data_table_name, 
                                               json_data_catalog_id, 
-                                              json_data_tag_key, 
-                                              json_data_tag_values)
+                                              json_data_assign_lf_tags)
         print("----------------------------")
         print(f"RESPONSE: {response}")
         print("----------------------------")
