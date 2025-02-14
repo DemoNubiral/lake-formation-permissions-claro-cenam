@@ -80,29 +80,29 @@ class Permissions:
             env_data_list = [] # Generaria una lista para almacenar multiples configuraciones dentro del archivo .env
             env_data = {} 
 
-        for line in file:
-            if not line.strip() or line.startswith("#"):
-                continue
-            key, value = line.split("=", 1)
-            key = key.strip()
-            value = value.strip().strip("'").strip('"')
-            
-            if key in ["TAG_VALUES", "ASSIGN_TAG", "LF_TAGS", "PERMISSIONS", "PERMISSIONS_WITH_GRANT_OPTION"]:
-                try:
-                    value = json.loads(value)
-                except json.JSONDecodeError:
-                    pass  
-            
-            env_data[key] = value            
+            for line in file:
+                if not line.strip() or line.startswith("#"):
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip("'").strip('"')
+                
+                if key in ["TAG_VALUES", "ASSIGN_TAG", "LF_TAGS", "PERMISSIONS", "PERMISSIONS_WITH_GRANT_OPTION"]:
+                    try:
+                        value = json.loads(value)
+                    except json.JSONDecodeError:
+                        pass  
+                
+                env_data[key] = value            
 
-            if key == "FLAG_PERMISSIONS":
+                if key == "FLAG_PERMISSIONS":
+                    env_data_list.append(env_data)
+                    env_data = {}  
+
+            if env_data:
                 env_data_list.append(env_data)
-                env_data = {}  
 
-        if env_data:
-            env_data_list.append(env_data)
-
-        return env_data_list
+            return env_data_list
 
     def read_all_env_files(self):
 
