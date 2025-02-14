@@ -5,8 +5,8 @@ import json
 
 
 class Permissions:
-    def __init__(self, path_file):
-        self.path_file = path_file
+    def __init__(self, path_dir):
+        self.path_dir = path_dir
         self.lakeformation = boto3.client('lakeformation')
 
     def grant_permissions(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, catalog_id):
@@ -74,17 +74,45 @@ class Permissions:
             return str(e)
         
     
-    def read_file_env(self):
-        file = open(self.path_file, 'r')
-        env_data = {}
+    def read_file_env(self, file_path):
+        
+        with open(file_path, 'r') as file:
+            env_data_list = [] # Generaria una lista para almacenar multiples configuraciones dentro del archivo .env
+            env_data = {} 
+
         for line in file:
             if not line.strip() or line.startswith("#"):
                 continue
             key, value = line.split("=", 1)
             key = key.strip()
             value = value.strip().strip("'").strip('"')
-            env_data[key] = value
-        return env_data
+            
+            if key in ["TAG_VALUES", "ASSIGN_TAG", "LF_TAGS", "PERMISSIONS", "PERMISSIONS_WITH_GRANT_OPTION"]:
+                try:
+                    value = json.loads(value)
+                except json.JSONDecodeError:
+                    pass  
+            
+            env_data[key] = value            
+
+            if key == "FLAG_PERMISSIONS":
+                env_data_list.append(env_data)
+                env_data = {}  
+
+        if env_data:
+            env_data_list.append(env_data)
+
+        return env_data_list
+
+    def read_all_env_files(self):
+
+        all_configs = [] 
+        for filename in os.listdir(self.path_dir):
+            if filename.endswith(".env"): 
+                file_path = os.path.join(self.path_dir, filename)
+                all_configs.extend(self.read_file_env(file_path)) 
+        return all_configs
+
 
 
 if __name__ == '__main__':
@@ -92,66 +120,57 @@ if __name__ == '__main__':
     path_file = os.getenv("PATH_FILE")   
     permissions = Permissions(path_file)
     
-    data = permissions.read_file_env()
-    json_data_role_arn= data['ROLE_ARN'] if 'ROLE_ARN' in data else ""
-    json_data_assign_lf_tags = json.loads(data['ASSIGN_TAG']) if 'ASSIGN_TAG' in data else ""
-    json_data_lf_tags = json.loads(data['LF_TAGS']) if 'LF_TAGS' in data else ""
-    json_data_permissions =  json.loads(data['PERMISSIONS']) if 'PERMISSIONS' in data else ""
-    json_data_permissions_with_grant_option = json.loads(data['PERMISSIONS_WITH_GRANT_OPTION']) if 'PERMISSIONS_WITH_GRANT_OPTION' in data else ""
-    json_data_resource_type = data['RESOURCE_TYPE'] if 'RESOURCE_TYPE' in data else ""
-    json_data_flag_permissions = data['FLAG_PERMISSIONS'] if 'FLAG_PERMISSIONS' in data else ""
-    json_data_catalog_id = data['CATALOG_ID'] if 'CATALOG_ID' in data else ""
-    json_data_tag_key = data['TAG_KEY'] if 'TAG_KEY' in data else ""
-    json_data_tag_values = json.loads(data['TAG_VALUES']) if 'TAG_VALUES' in data else ""
-    json_data_database_name = data['DATABASE_NAME'] if 'DATABASE_NAME' in data else ""
-    json_data_table_name = data['TABLE_NAME'] if 'TABLE_NAME' in data else ""
+    data = permissions.read_all_env_files()
 
+    for config in data:
+        
+        flag = config.get("FLAG_PERMISSIONS")
+        print("----------------------------")
+        print(f"Processing: {flag}")
+        print("----------------------------")    
 
-    print("----------------------------")
-    print("Se inicia la ejecución del script")
-    print("----------------------------")
+        print("----------------------------")
+        print("Se inicia la ejecución del script")
+        print("----------------------------")
 
-    if json_data_flag_permissions == 'create_lf_tags':
-        print("----------------------------")
-        print("create_lf_tags")
-        print("----------------------------")
-        response = permissions.create_lf_tags(json_data_tag_key, json_data_tag_values)
-        print("----------------------------")
-        print(f"RESPONSE: {response}")
-        print("----------------------------")
-    elif json_data_flag_permissions == 'assign_lf_tags':
-        print("----------------------------")
-        print("assign_lf_tags")
-        print("----------------------------")
-        response = permissions.assign_lf_tags(json_data_database_name, 
-                                              json_data_table_name, 
-                                              json_data_catalog_id, 
-                                              json_data_assign_lf_tags)
-        print("----------------------------")
-        print(f"RESPONSE: {response}")
-        print("----------------------------")
-    elif json_data_flag_permissions == 'grant_permissions':
-        print("----------------------------")
-        print("grant_permissions")
-        print("----------------------------")
-        response = permissions.grant_permissions(json_data_role_arn, 
-                                                 json_data_lf_tags, 
-                                                 json_data_permissions, 
-                                                 json_data_permissions_with_grant_option, 
-                                                 json_data_resource_type, 
-                                                 json_data_catalog_id)
-        print("----------------------------")
-        print(f"RESPONSE: {response}")
-        print("----------------------------")
-    else:
-        response = 'Invalid flag_permissions'
-        print("----------------------------")
-        print(response)
-        print("----------------------------")
-        exit(1)
+        if flag == 'create_lf_tags':
+            print("----------------------------")
+            print("create_lf_tags")
+            print("----------------------------")
+            response = permissions.create_lf_tags(config.get("TAG_KEY"), config.get("TAG_VALUES"))
+            print("----------------------------")
+            print(f"RESPONSE: {response}")
+            print("----------------------------")
+        elif flag == 'assign_lf_tags':
+            print("----------------------------")
+            print("assign_lf_tags")
+            print("----------------------------")
+            response = permissions.assign_lf_tags(config.get("DATABASE_NAME"), 
+                                                config.get("TABLE_NAME"), 
+                                                config.get("CATALOG_ID"), 
+                                                config.get("ASSIGN_TAG"))
+            print("----------------------------")
+            print(f"RESPONSE: {response}")
+            print("----------------------------")
+        elif flag == 'grant_permissions':
+            print("----------------------------")
+            print("grant_permissions")
+            print("----------------------------")
+            response = permissions.grant_permissions(config.get("ROLE_ARN"), config.get("LF_TAGS"), 
+                                              config.get("PERMISSIONS"), config.get("PERMISSIONS_WITH_GRANT_OPTION"), 
+                                              config.get("RESOURCE_TYPE"), config.get("CATALOG_ID"))
+            print("----------------------------")
+            print(f"RESPONSE: {response}")
+            print("----------------------------")
+        else:
+            response = 'Invalid flag_permissions'
+            print("----------------------------")
+            print(response)
+            print("----------------------------")
+            exit(1)
 
-    print("----------------------------")
-    print("Se finaliza la ejecución del script")
-    print("----------------------------")
+        print("----------------------------")
+        print("Se finaliza la ejecución del script")
+        print("----------------------------")
 
 

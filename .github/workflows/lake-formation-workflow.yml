@@ -8,7 +8,6 @@ on:
       - main
       - dev
     paths:
-      - 'code-permissions/**'
       - 'table-permissions/**'
       - 'database-permissions/**'
       - 'create-lf-tags/**'
