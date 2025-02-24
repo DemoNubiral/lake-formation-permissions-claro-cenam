@@ -3,92 +3,6 @@ import os
 import json
 
 #### Adicionar a nivel de columna ###
-
-# def assign_lf_tags(self, database_name, table_name, catalog_id, assign_lf_tags, column_name=None):
-#     try:
-#         # Asigna etiquetas LF a recursos
-#         resource = {'Table': {'DatabaseName': database_name, 'Name': table_name}}
-        
-#         if column_name:
-#             resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
-        
-#         for item in assign_lf_tags:
-#             response = self.lakeformation.add_lf_tags_to_resource(
-#                 CatalogId=catalog_id,  
-#                 Resource=resource,
-#                 LFTags=[
-#                     {
-#                         'CatalogId': catalog_id,
-#                         'TagKey': item['TagKey'],
-#                         'TagValues': item['TagValues']
-#                     },
-#                 ]
-#             )
-
-#         return response
-#     except Exception as e:
-#         return str(e)
-
-
-# if __name__ == '__main__':
-#     # Parámetros de configuración
-#     path_file = os.getenv("PATH_FILE")   
-#     permissions = Permissions(path_file)
-    
-#     data = permissions.read_all_env_files()
-
-#     for config in data:
-        
-#         flag = config.get("FLAG_PERMISSIONS")
-#         print("----------------------------")
-#         print(f"Processing: {flag}")
-#         print("----------------------------")    
-
-#         print("----------------------------")
-#         print("Se inicia la ejecución del script")
-#         print("----------------------------")
-
-#         if flag == 'create_lf_tags':
-#             print("----------------------------")
-#             print("create_lf_tags")
-#             print("----------------------------")
-#             response = permissions.create_lf_tags(config.get("TAG_KEY"), config.get("TAG_VALUES"))
-#             print("----------------------------")
-#             print(f"RESPONSE: {response}")
-#             print("----------------------------")
-#         elif flag == 'assign_lf_tags':
-#             print("----------------------------")
-#             print("assign_lf_tags")
-#             print("----------------------------")
-#             response = permissions.assign_lf_tags(config.get("DATABASE_NAME"), 
-#                                                 config.get("TABLE_NAME"), 
-#                                                 config.get("CATALOG_ID"), 
-#                                                 config.get("ASSIGN_TAG"),
-#                                                 config.get("COLUMN_NAME"))
-#             print("----------------------------")
-#             print(f"RESPONSE: {response}")
-#             print("----------------------------")
-#         elif flag == 'grant_permissions':
-#             print("----------------------------")
-#             print("grant_permissions")
-#             print("----------------------------")
-#             response = permissions.grant_permissions(config.get("ROLE_ARN"), config.get("LF_TAGS"), 
-#                                               config.get("PERMISSIONS"), config.get("PERMISSIONS_WITH_GRANT_OPTION"), 
-#                                               config.get("RESOURCE_TYPE"), config.get("CATALOG_ID"))
-#             print("----------------------------")
-#             print(f"RESPONSE: {response}")
-#             print("----------------------------")
-#         else:
-#             response = 'Invalid flag_permissions'
-#             print("----------------------------")
-#             print(response)
-#             print("----------------------------")
-#             exit(1)
-
-#         print("----------------------------")
-#         print("Se finaliza la ejecución del script")
-#         print("----------------------------")
-
 class Permissions:
     def __init__(self, path_dir):
         self.path_dir = path_dir
@@ -132,27 +46,26 @@ class Permissions:
             return str(e)
         
 
-    def assign_lf_tags(self, database_name, table_name, catalog_id, assign_lf_tags):
+    def assign_lf_tags(self, database_name, table_name, catalog_id, assign_lf_tags, column_name=None):
         try:
             # Asigna etiquetas LF a recursos
+            resource = {'Table': {'DatabaseName': database_name, 'Name': table_name}}
+            
+            if column_name:
+                resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
+                
             for item in assign_lf_tags:
-                    response = self.lakeformation.add_lf_tags_to_resource(
-                        CatalogId=catalog_id,  
-                        
-                        Resource={
-                            'Table': {
-                                'DatabaseName': database_name,
-                                'Name': table_name,
-                            }
+                response = self.lakeformation.add_lf_tags_to_resource(
+                    CatalogId=catalog_id,  
+                    Resource=resource,
+                    LFTags=[
+                        {
+                            'CatalogId': catalog_id,
+                            'TagKey': item['TagKey'],
+                            'TagValues': item['TagValues']
                         },
-                        LFTags=[
-                            {
-                                'CatalogId': catalog_id,
-                                'TagKey': item['TagKey'],
-                                'TagValues': item['TagValues']
-                            },
-                        ]
-                    )
+                    ]
+                )
 
             return response
         except Exception as e:
@@ -233,7 +146,8 @@ if __name__ == '__main__':
             response = permissions.assign_lf_tags(config.get("DATABASE_NAME"), 
                                                 config.get("TABLE_NAME"), 
                                                 config.get("CATALOG_ID"), 
-                                                config.get("ASSIGN_TAG"))
+                                                config.get("ASSIGN_TAG"),
+                                                config.get("COLUMN_NAME"))
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
