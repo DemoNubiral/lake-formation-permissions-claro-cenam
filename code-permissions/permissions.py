@@ -49,7 +49,7 @@ class Permissions:
     def assign_lf_tags_columns(self, database_name, table_name, catalog_id, column_tags, assign_lf_tags, column_name=None):
         try:
             # Asigna etiquetas LF a recursos
-            resource = {'Table': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
+            resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
             
             # if column_name:
             #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
