@@ -46,26 +46,20 @@ class Permissions:
             return str(e)
         
 
-    def assign_lf_tags_columns(self, database_name, table_name, catalog_id, assign_lf_tags, column_name=None):
+    def assign_lf_tags_columns(self, database_name, table_name, catalog_id, column_tags, assign_lf_tags, column_name=None):
         try:
             # Asigna etiquetas LF a recursos
-            resource = {'Table': {'DatabaseName': database_name, 'Name': table_name}}
+            resource = {'Table': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
             
-            if column_name:
-                resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
-                print(f"Nombre de la columna dentro de assign_lf_tags_columns: {column_name}")
+            # if column_name:
+            #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
+            #     print(f"Nombre de la columna dentro de assign_lf_tags_columns: {column_name}")
                 
-            for item in assign_lf_tags:
+            for column_name, lf_tags in column_tags.items():
                 response = self.lakeformation.add_lf_tags_to_resource(
-                    CatalogId=catalog_id,  
+                    # CatalogId=catalog_id,  
                     Resource=resource,
-                    LFTags=[
-                        {
-                            'CatalogId': catalog_id,
-                            'TagKey': item['TagKey'],
-                            'TagValues': item['TagValues']
-                        },
-                    ]
+                    LFTags=lf_tags
                 )
             print(f"Nombre tabla: {table_name}, Nombre columna: {column_name}")
             return response
