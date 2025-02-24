@@ -66,7 +66,7 @@ class Permissions:
                         },
                     ]
                 )
-
+            print(f"Nombre tabla: {table_name}, Nombre columna: {column_name}")
             return response
         except Exception as e:
             return str(e)
