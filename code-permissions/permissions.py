@@ -161,6 +161,11 @@ class Permissions:
             raise ValueError("column_names debe ser una lista después de la conversión.")
             
         columns_name = [col.strip().strip("'").strip('"') for col in columns_name] 
+        # Asegurarse de que excluded_columns sea una lista o None
+        if excluded_columns is None:
+            excluded_columns = []  # Convertir None en una lista vacía
+        elif not isinstance(excluded_columns, (list, tuple)):
+            raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
         
         # Construye el parámetro del filtro de celdas
         table_data = {
