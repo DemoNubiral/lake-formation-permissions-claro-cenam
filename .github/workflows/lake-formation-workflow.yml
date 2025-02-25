@@ -12,6 +12,7 @@ on:
       - 'database-permissions/**'
       - 'create-lf-tags/**'
       - 'assign-lf-tags/**'
+      - 'data-filters/**'
 
   workflow_dispatch:
 
@@ -61,6 +62,7 @@ jobs:
             ./database-permissions/*.env
             ./create-lf-tags/*.env
             ./assign-lf-tags/*.env
+            ./data-filters/*.env
 
 
       - name: Get info data
