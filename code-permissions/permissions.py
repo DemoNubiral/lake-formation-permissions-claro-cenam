@@ -58,7 +58,13 @@ class Permissions:
         elif isinstance(assign_lf_tags, list):
             lf_tags = assign_lf_tags
         else:
-            raise TypeError("assign_lf_tags debe ser una lista o una cadena JSON.")        
+            raise TypeError("assign_lf_tags debe ser una lista o una cadena JSON.")     
+
+        # Convertir a lista si es necesario
+        if isinstance(column_names, str):
+            column_names = [col.strip() for col in column_names.split(",")]
+        elif not isinstance(column_names, list):
+            raise ValueError("column_names debe ser una lista después de la conversión.")   
 
         # Construir el diccionario de tags por columna
         column_tags = {
