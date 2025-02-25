@@ -146,8 +146,7 @@ class Permissions:
     # def data_filters(self, catalog_id, database_name, table_name, filter_name, row_filter, assign_lf_tags, column_names=None):
 
 
-    def create_data_cells_filter(self,
-        catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
+    def create_data_cells_filter(self, catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
     ):
         """
         Crea un filtro de celdas de datos en AWS Lake Formation.
@@ -162,6 +161,17 @@ class Permissions:
         :param version_id: ID de la versión de la tabla (opcional).
         """
         client = boto3.client('lakeformation')
+
+        # Si column_names parece una lista en texto, conviértela a una lista real
+        if isinstance(columns_names, str):
+            try:
+                columns_names = ast.literal_eval(columns_names)
+            except (ValueError, SyntaxError):
+                raise ValueError("COLUMN_NAME no es una lista válida ni se pudo convertir.")
+        elif not isinstance(columns_names, list):
+            raise ValueError("column_names debe ser una lista después de la conversión.")
+            
+        columns_names = [col.strip().strip("'").strip('"') for col in columns_names] 
         
         # Construye el parámetro del filtro de celdas
         table_data = {
@@ -174,14 +184,18 @@ class Permissions:
             },
             "ColumnNames": columns_name,
         }
+        
 
         if excluded_columns:
-            table_data["ColumnWildcard"] = {"ExcludedColumnNames": excluded_columns}
-        else:
-            table_data["ColumnWildcard"] = {}
+            if not isinstance(excluded_columns, (list, tuple)):
+                raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
+            table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
 
         if version_id:
             table_data["VersionId"] = version_id
+
+        if not row_filter:
+            table_data['RowFilter']['AllRowsWildcard'] = {}
 
         try:
             # Crea el filtro
