@@ -146,8 +146,8 @@ class Permissions:
     # def data_filters(self, catalog_id, database_name, table_name, filter_name, row_filter, assign_lf_tags, column_names=None):
 
 
-    def create_data_cells_filter(
-        catalog_id, database_name, table_name, filter_name, row_filter, columns_name, excluded_columns=None, version_id=None
+    def create_data_cells_filter(self,
+        catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
     ):
         """
         Crea un filtro de celdas de datos en AWS Lake Formation.
