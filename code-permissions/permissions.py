@@ -1,6 +1,7 @@
 import boto3
 import os
 import json
+from botocore.exceptions import ClientError
 
 #### Adicionar a nivel de columna ###
 class Permissions:
@@ -46,25 +47,58 @@ class Permissions:
             return str(e)
         
 
-    def assign_lf_tags_columns(self, database_name, table_name, catalog_id, column_tags, assign_lf_tags, column_name=None):
-        try:
-            # Asigna etiquetas LF a recursos
-            resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
-            
-            # if column_name:
-            #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
-            #     print(f"Nombre de la columna dentro de assign_lf_tags_columns: {column_name}")
-                
-            for column_name, lf_tags in column_tags.items():
-                response = self.lakeformation.add_lf_tags_to_resource(
-                    # CatalogId=catalog_id,  
+    def assign_lf_tags_columns(self, database_name, table_name, catalog_id, assign_lf_tags, column_names=None):
+
+        # Convertir la cadena JSON a un objeto de Python
+        lf_tags = json.loads(assign_lf_tags)
+
+        # Construir el diccionario de tags por columna
+        column_tags = {
+            column_name: [{"CatalogId": catalog_id, "TagKey": tag["TagKey"], "TagValues": tag["TagValues"]}]
+            for column_name in column_names
+            for tag in lf_tags
+        }
+
+        client = boto3.client('lakeformation')
+
+        for column_name, lf_tags in column_tags.items():
+            try:
+                # Configurar el recurso (columna de la tabla)
+                resource = {
+                    "TableWithColumns": {
+                        "DatabaseName": database_name,
+                        "Name": table_name,
+                        "ColumnNames": [column_name],
+                    }
+                }
+
+                # Asignar LF-Tags al recurso
+                response = client.add_lf_tags_to_resource(
                     Resource=resource,
                     LFTags=lf_tags
                 )
-            print(f"Nombre tabla: {table_name}, Nombre columna: {column_name}")
-            return response
-        except Exception as e:
-            return str(e)
+
+                print(f"LF-Tags asignadas exitosamente a la columna '{column_name}': {response}")
+            except ClientError as e:
+                print(f"Error asignando LF-Tags a la columna '{column_name}': {e}")
+        # try:
+        #     # Asigna etiquetas LF a recursos
+        #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
+            
+        #     # if column_name:
+        #     #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
+        #     #     print(f"Nombre de la columna dentro de assign_lf_tags_columns: {column_name}")
+                
+        #     for column_name, lf_tags in column_tags.items():
+        #         response = self.lakeformation.add_lf_tags_to_resource(
+        #             # CatalogId=catalog_id,  
+        #             Resource=resource,
+        #             LFTags=lf_tags
+        #         )
+        #     print(f"Nombre tabla: {table_name}, Nombre columna: {column_name}")
+        #     return response
+        # except Exception as e:
+        #     return str(e)
         
     
     def read_file_env(self, file_path):
