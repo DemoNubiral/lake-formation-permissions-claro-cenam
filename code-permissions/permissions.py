@@ -246,8 +246,6 @@ if __name__ == '__main__':
             print("----------------------------")
         elif flag == 'data_filters':
             print("----------------------------")
-            print(f"RESPONDE: {response}")
-            print("----------------------------")
             print("data_filters")
             print("----------------------------")
             response = permissions.create_data_cells_filter(config.get("CATALOG_ID"),
