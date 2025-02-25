@@ -148,30 +148,19 @@ class Permissions:
 
     def create_data_cells_filter(self, catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
     ):
-        """
-        Crea un filtro de celdas de datos en AWS Lake Formation.
 
-        :param catalog_id: ID del catálogo (normalmente el ID de la cuenta de AWS).
-        :param database_name: Nombre de la base de datos en el Glue Data Catalog.
-        :param table_name: Nombre de la tabla.
-        :param filter_name: Nombre único para el filtro.
-        :param row_filter: Condición para filtrar filas (expresión SQL WHERE).
-        :param columns_name: Lista de nombres de columnas incluidas en el filtro.
-        :param excluded_columns: Lista de nombres de columnas a excluir (opcional).
-        :param version_id: ID de la versión de la tabla (opcional).
-        """
         client = boto3.client('lakeformation')
 
         # Si column_names parece una lista en texto, conviértela a una lista real
-        if isinstance(columns_names, str):
+        if isinstance(columns_name, str):
             try:
-                columns_names = ast.literal_eval(columns_names)
+                columns_name = ast.literal_eval(columns_name)
             except (ValueError, SyntaxError):
                 raise ValueError("COLUMN_NAME no es una lista válida ni se pudo convertir.")
-        elif not isinstance(columns_names, list):
+        elif not isinstance(columns_name, list):
             raise ValueError("column_names debe ser una lista después de la conversión.")
             
-        columns_names = [col.strip().strip("'").strip('"') for col in columns_names] 
+        columns_name = [col.strip().strip("'").strip('"') for col in columns_name] 
         
         # Construye el parámetro del filtro de celdas
         table_data = {
