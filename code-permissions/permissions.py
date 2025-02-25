@@ -50,7 +50,15 @@ class Permissions:
     def assign_lf_tags_columns(self, database_name, table_name, catalog_id, assign_lf_tags, column_names=None):
 
         # Convertir la cadena JSON a un objeto de Python
-        lf_tags = json.load(assign_lf_tags)
+        # lf_tags = json.load(assign_lf_tags)
+        
+        # Verifica si `assign_lf_tags` es una lista o cadena
+        if isinstance(assign_lf_tags, str):
+            lf_tags = json.loads(assign_lf_tags)
+        elif isinstance(assign_lf_tags, list):
+            lf_tags = assign_lf_tags
+        else:
+            raise TypeError("assign_lf_tags debe ser una lista o una cadena JSON.")        
 
         # Construir el diccionario de tags por columna
         column_tags = {
@@ -81,24 +89,6 @@ class Permissions:
                 print(f"LF-Tags asignadas exitosamente a la columna '{column_name}': {response}")
             except ClientError as e:
                 print(f"Error asignando LF-Tags a la columna '{column_name}': {e}")
-        # try:
-        #     # Asigna etiquetas LF a recursos
-        #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, "ColumnNames": [column_name]}}
-            
-        #     # if column_name:
-        #     #     resource = {'TableWithColumns': {'DatabaseName': database_name, 'Name': table_name, 'ColumnNames': [column_name]}}
-        #     #     print(f"Nombre de la columna dentro de assign_lf_tags_columns: {column_name}")
-                
-        #     for column_name, lf_tags in column_tags.items():
-        #         response = self.lakeformation.add_lf_tags_to_resource(
-        #             # CatalogId=catalog_id,  
-        #             Resource=resource,
-        #             LFTags=lf_tags
-        #         )
-        #     print(f"Nombre tabla: {table_name}, Nombre columna: {column_name}")
-        #     return response
-        # except Exception as e:
-        #     return str(e)
         
     
     def read_file_env(self, file_path):
