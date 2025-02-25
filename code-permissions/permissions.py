@@ -172,7 +172,7 @@ if __name__ == '__main__':
             print("----------------------------")
             print("assign_lf_tags")
             print("----------------------------")
-            response = permissions.assign_lf_tags_columns(config.get("DATABASE_NAME"), 
+            response = permissions.assign_lf_tags_to_columns(config.get("DATABASE_NAME"), 
                                                 config.get("TABLE_NAME"), 
                                                 config.get("CATALOG_ID"), 
                                                 config.get("ASSIGN_TAG"),
