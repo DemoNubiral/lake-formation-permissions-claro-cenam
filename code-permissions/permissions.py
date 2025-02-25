@@ -146,7 +146,7 @@ class Permissions:
     # def data_filters(self, catalog_id, database_name, table_name, filter_name, row_filter, assign_lf_tags, column_names=None):
 
 
-    def create_data_cells_filter(self, catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
+    def create_data_cells_filter(self, catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None
     ):
 
         client = boto3.client('lakeformation')
@@ -163,30 +163,36 @@ class Permissions:
         columns_name = [col.strip().strip("'").strip('"') for col in columns_name] 
         # Asegurarse de que excluded_columns sea una lista o None
         if excluded_columns is None:
-            excluded_columns = []  # Convertir None en una lista vacía
-        elif not isinstance(excluded_columns, (list, tuple)):
-            raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
-        
+            table_data = {
+                "TableCatalogId": catalog_id,
+                "DatabaseName": database_name,
+                "TableName": table_name,
+                "Name": filter_name,
+                "RowFilter": {
+                    "FilterExpression": row_filter,
+                },
+                "ColumnNames": columns_name,
+            }
+        else:
+            table_data = {
+                "TableCatalogId": catalog_id,
+                "DatabaseName": database_name,
+                "TableName": table_name,
+                "Name": filter_name,
+                "RowFilter": {
+                    "FilterExpression": row_filter,
+                },
+                "ColumnNames": columns_name,
+                "ExcludedColumnNames": excluded_columns
+            }
+                    
         # Construye el parámetro del filtro de celdas
-        table_data = {
-            "TableCatalogId": catalog_id,
-            "DatabaseName": database_name,
-            "TableName": table_name,
-            "Name": filter_name,
-            "RowFilter": {
-                "FilterExpression": row_filter,
-            },
-            "ColumnNames": columns_name,
-        }
+
         
-
-        if excluded_columns:
-            if not isinstance(excluded_columns, (list, tuple)):
-                raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
-            table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
-
-        if version_id:
-            table_data["VersionId"] = version_id
+        # if excluded_columns:
+        #     if not isinstance(excluded_columns, (list, tuple)):
+        #         raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
+        #     table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
 
         if not row_filter:
             table_data['RowFilter']['AllRowsWildcard'] = {}
@@ -262,8 +268,7 @@ if __name__ == '__main__':
                                                             config.get("FILTER_NAME"),
                                                             config.get("ROW_FILTER"),
                                                             config.get("COLUMNS_NAME"),
-                                                            config.get("EXCLUDED_COLUMNS"),
-                                                            config.get("VERSION_ID"))
+                                                            config.get("EXCLUDED_COLUMNS"))
         else:
             response = 'Invalid flag_permissions'
             print("----------------------------")
