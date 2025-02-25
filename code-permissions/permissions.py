@@ -50,7 +50,7 @@ class Permissions:
     def assign_lf_tags_columns(self, database_name, table_name, catalog_id, assign_lf_tags, column_names=None):
 
         # Convertir la cadena JSON a un objeto de Python
-        lf_tags = json.loads(assign_lf_tags)
+        lf_tags = json.load(assign_lf_tags)
 
         # Construir el diccionario de tags por columna
         column_tags = {
