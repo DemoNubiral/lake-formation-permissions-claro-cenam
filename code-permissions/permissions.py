@@ -143,9 +143,57 @@ class Permissions:
         return all_configs
     
 
-    def data_filters(self):
-        pass
+    # def data_filters(self, catalog_id, database_name, table_name, filter_name, row_filter, assign_lf_tags, column_names=None):
 
+
+    def create_data_cells_filter(
+        catalog_id, database_name, table_name, filter_name, row_filter, columns_name, excluded_columns=None, version_id=None
+    ):
+        """
+        Crea un filtro de celdas de datos en AWS Lake Formation.
+
+        :param catalog_id: ID del catálogo (normalmente el ID de la cuenta de AWS).
+        :param database_name: Nombre de la base de datos en el Glue Data Catalog.
+        :param table_name: Nombre de la tabla.
+        :param filter_name: Nombre único para el filtro.
+        :param row_filter: Condición para filtrar filas (expresión SQL WHERE).
+        :param columns_name: Lista de nombres de columnas incluidas en el filtro.
+        :param excluded_columns: Lista de nombres de columnas a excluir (opcional).
+        :param version_id: ID de la versión de la tabla (opcional).
+        """
+        client = boto3.client('lakeformation')
+        
+        # Construye el parámetro del filtro de celdas
+        table_data = {
+            "TableCatalogId": catalog_id,
+            "DatabaseName": database_name,
+            "TableName": table_name,
+            "Name": filter_name,
+            "RowFilter": {
+                "FilterExpression": row_filter,
+            },
+            "ColumnNames": columns_name,
+        }
+
+        if excluded_columns:
+            table_data["ColumnWildcard"] = {"ExcludedColumnNames": excluded_columns}
+        else:
+            table_data["ColumnWildcard"] = {}
+
+        if version_id:
+            table_data["VersionId"] = version_id
+
+        try:
+            # Crea el filtro
+            response = client.create_data_cells_filter(
+                TableData=table_data
+            )
+            print(f"Filtro '{filter_name}' creado exitosamente: {response}")
+            return response
+
+        except ClientError as e:
+            print(f"Error creando el filtro '{filter_name}': {e}")
+            return None
 
 
 if __name__ == '__main__':
@@ -197,7 +245,19 @@ if __name__ == '__main__':
             print(f"RESPONSE: {response}")
             print("----------------------------")
         elif flag == 'data_filters':
-            pass
+            print("----------------------------")
+            print(f"RESPONDE: {response}")
+            print("----------------------------")
+            print("data_filters")
+            print("----------------------------")
+            response = permissions.create_data_cells_filter(config.get("CATALOG_ID"),
+                                                            config.get("DATABASE_NAME"),
+                                                            config.get("TABLE_NAME"),
+                                                            config.get("FILTER_NAME"),
+                                                            config.get("ROW_FILTER"),
+                                                            config.get("COLUMNS_NAME"),
+                                                            config.get("EXCLUDED_COLUMNS"),
+                                                            config.get("VERSION_ID"))
         else:
             response = 'Invalid flag_permissions'
             print("----------------------------")
