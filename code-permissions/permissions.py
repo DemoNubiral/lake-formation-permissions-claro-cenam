@@ -2,6 +2,7 @@ import boto3
 import os
 import json
 from botocore.exceptions import ClientError
+import ast
 
 #### Adicionar a nivel de columna ###
 class Permissions:
@@ -60,11 +61,16 @@ class Permissions:
         else:
             raise TypeError("assign_lf_tags debe ser una lista o una cadena JSON.")     
 
-        # Convertir a lista si es necesario
+    # Si column_names parece una lista en texto, conviértela a una lista real
         if isinstance(column_names, str):
-            column_names = [col.strip() for col in column_names.split(",")]
+            try:
+                column_names = ast.literal_eval(column_names)
+            except (ValueError, SyntaxError):
+                raise ValueError("COLUMN_NAME no es una lista válida ni se pudo convertir.")
         elif not isinstance(column_names, list):
-            raise ValueError("column_names debe ser una lista después de la conversión.")   
+            raise ValueError("column_names debe ser una lista después de la conversión.")
+            
+        column_names = [col.strip().strip("'").strip('"') for col in column_names] 
 
         # Construir el diccionario de tags por columna
         column_tags = {
