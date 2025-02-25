@@ -141,6 +141,10 @@ class Permissions:
                 file_path = os.path.join(self.path_dir, filename)
                 all_configs.extend(self.read_file_env(file_path)) 
         return all_configs
+    
+
+    def data_filters(self):
+        pass
 
 
 
@@ -192,6 +196,8 @@ if __name__ == '__main__':
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
+        elif flag == 'data_filters':
+            pass
         else:
             response = 'Invalid flag_permissions'
             print("----------------------------")
