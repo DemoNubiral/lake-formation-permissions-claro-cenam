@@ -189,9 +189,10 @@ class Permissions:
         # Construye el parámetro del filtro de celdas
 
         # Validar si excluded_columns fue proporcionado
-        if excluded_columns is not None:
-            if not isinstance(excluded_columns, (list, tuple)):
-                raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
+        if excluded_columns in [None, "None", "null", "NULL"]:
+            excluded_columns=None
+        elif not isinstance(excluded_columns, (list, tuple)):
+            raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
 
         table_data = {
             "TableCatalogId": catalog_id,
