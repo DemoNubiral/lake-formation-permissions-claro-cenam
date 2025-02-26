@@ -189,9 +189,23 @@ class Permissions:
         # Construye el parámetro del filtro de celdas
 
         # Validar si excluded_columns fue proporcionado
-        if excluded_columns in [None, "None", "null", "NULL"]:
-            excluded_columns=None
-        elif not isinstance(excluded_columns, (list, tuple)):
+        # if excluded_columns in [None, "None", "null", "NULL"]:
+        #     excluded_columns=None
+        # elif not isinstance(excluded_columns, (list, tuple)):
+        #     raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
+
+    # DEBUG: Ver el tipo y valor de excluded_columns antes de la validación
+        print(f"DEBUG - Tipo de excluded_columns antes de la validación: {type(excluded_columns)}, Valor: {excluded_columns}")
+
+        if excluded_columns in [None, "None", "null", "NULL", ""]:
+            excluded_columns = None
+        elif isinstance(excluded_columns, str):  
+            try:
+                excluded_columns = ast.literal_eval(excluded_columns)  
+            except (ValueError, SyntaxError):
+                raise ValueError("El parámetro 'excluded_columns' no es una lista válida ni se pudo convertir.")
+
+        if excluded_columns is not None and not isinstance(excluded_columns, (list, tuple)):
             raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
 
         table_data = {
@@ -205,7 +219,7 @@ class Permissions:
             "ColumnNames": columns_name,
         }
 
-# Incluir ColumnWildcard si excluded_columns tiene datos
+    # Incluir ColumnWildcard si excluded_columns tiene datos
         if excluded_columns:
             print(f"El parámetro 'excluded_columns' fue incluido con los datos: {excluded_columns}")
             table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
@@ -215,10 +229,10 @@ class Permissions:
             print(f"El parámetro 'version_id' fue incluido con el valor: {version_id}")
             table_data['VersionId'] = version_id    
                 
-        if excluded_columns:
-            if not isinstance(excluded_columns, (list, tuple)):
-                raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
-            table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
+        # if excluded_columns:
+        #     if not isinstance(excluded_columns, (list, tuple)):
+        #         raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
+        #     table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
 
         if not row_filter:
             table_data['RowFilter']['AllRowsWildcard'] = {}
