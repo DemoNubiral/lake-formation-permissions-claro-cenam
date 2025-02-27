@@ -20,7 +20,7 @@ class Permissions:
                 Resource={
                     'LFTagPolicy': {
                         'CatalogId': catalog_id,  
-                        'ResourceType': resource_type ,     # Cambia a 'DATABASE' si deseas aplicar a bases de datos
+                        'ResourceType': resource_type ,     
                         'Expression': lf_tags
                     }
                 },
@@ -46,14 +46,37 @@ class Permissions:
 
         except Exception as e:
             return str(e)
+
+
+    def assign_lf_tags(self, database_name, table_name, catalog_id, assign_lf_tags):
+        try:
+            # Asigna etiquetas LF a recursos
+            for item in assign_lf_tags:
+                    response = self.lakeformation.add_lf_tags_to_resource(
+                        CatalogId=catalog_id,  
+
+                        Resource={
+                            'Table': {
+                                'DatabaseName': database_name,
+                                'Name': table_name,
+                            }
+                        },
+                        LFTags=[
+                            {
+                                'CatalogId': catalog_id,
+                                'TagKey': item['TagKey'],
+                                'TagValues': item['TagValues']
+                            },
+                        ]
+                    )
+
+            return response
+        except Exception as e:
+            return str(e)
         
 
     def assign_lf_tags_columns(self, database_name, table_name, catalog_id, assign_lf_tags, column_names=None):
 
-        # Convertir la cadena JSON a un objeto de Python
-        # lf_tags = json.load(assign_lf_tags)
-        
-        # Verifica si `assign_lf_tags` es una lista o cadena
         if isinstance(assign_lf_tags, str):
             lf_tags = json.loads(assign_lf_tags)
         elif isinstance(assign_lf_tags, list):
@@ -61,7 +84,6 @@ class Permissions:
         else:
             raise TypeError("assign_lf_tags debe ser una lista o una cadena JSON.")     
 
-    # Si column_names parece una lista en texto, conviértela a una lista real
         if isinstance(column_names, str):
             try:
                 column_names = ast.literal_eval(column_names)
@@ -72,18 +94,14 @@ class Permissions:
             
         column_names = [col.strip().strip("'").strip('"') for col in column_names] 
 
-        # Construir el diccionario de tags por columna
         column_tags = {
             column_name: [{"CatalogId": catalog_id, "TagKey": tag["TagKey"], "TagValues": tag["TagValues"]}]
             for column_name in column_names
             for tag in lf_tags
         }
 
-        client = boto3.client('lakeformation')
-
         for column_name, lf_tags in column_tags.items():
             try:
-                # Configurar el recurso (columna de la tabla)
                 resource = {
                     "TableWithColumns": {
                         "DatabaseName": database_name,
@@ -92,8 +110,7 @@ class Permissions:
                     }
                 }
 
-                # Asignar LF-Tags al recurso
-                response = client.add_lf_tags_to_resource(
+                response = self.lakeformation.add_lf_tags_to_resource(
                     Resource=resource,
                     LFTags=lf_tags
                 )
@@ -106,7 +123,7 @@ class Permissions:
     def read_file_env(self, file_path):
         
         with open(file_path, 'r') as file:
-            env_data_list = [] # Generaria una lista para almacenar multiples configuraciones dentro del archivo .env
+            env_data_list = [] 
             env_data = {} 
 
             for line in file:
@@ -143,13 +160,8 @@ class Permissions:
         return all_configs
     
 
-    # def data_filters(self, catalog_id, database_name, table_name, filter_name, row_filter, assign_lf_tags, column_names=None):
-
-
     def create_data_cells_filter(self, catalog_id, database_name, table_name, filter_name, row_filter, columns_name,  excluded_columns=None, version_id=None
     ):
-
-        client = boto3.client('lakeformation')
 
         # Si column_names parece una lista en texto, conviértela a una lista real
         if isinstance(columns_name, str):
@@ -161,40 +173,7 @@ class Permissions:
             raise ValueError("column_names debe ser una lista después de la conversión.")
             
         columns_name = [col.strip().strip("'").strip('"') for col in columns_name] 
-        # Asegurarse de que excluded_columns sea una lista o None
-        # if excluded_columns is None:
-        #     table_data = {
-        #         "TableCatalogId": catalog_id,
-        #         "DatabaseName": database_name,
-        #         "TableName": table_name,
-        #         "Name": filter_name,
-        #         "RowFilter": {
-        #             "FilterExpression": row_filter,
-        #         },
-        #         "ColumnNames": columns_name,
-        #     }
-        # else:
-        #     table_data = {
-        #         "TableCatalogId": catalog_id,
-        #         "DatabaseName": database_name,
-        #         "TableName": table_name,
-        #         "Name": filter_name,
-        #         "RowFilter": {
-        #             "FilterExpression": row_filter,
-        #         },
-        #         "ColumnNames": columns_name,
-        #         "ExcludedColumnNames": excluded_columns
-        #     }
-                    
-        # Construye el parámetro del filtro de celdas
 
-        # Validar si excluded_columns fue proporcionado
-        # if excluded_columns in [None, "None", "null", "NULL"]:
-        #     excluded_columns=None
-        # elif not isinstance(excluded_columns, (list, tuple)):
-        #     raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
-
-    # DEBUG: Ver el tipo y valor de excluded_columns antes de la validación
         print(f"DEBUG - Tipo de excluded_columns antes de la validación: {type(excluded_columns)}, Valor: {excluded_columns}")
 
         if excluded_columns in [None, "None", "null", "NULL", ""]:
@@ -219,27 +198,19 @@ class Permissions:
             "ColumnNames": columns_name,
         }
 
-    # Incluir ColumnWildcard si excluded_columns tiene datos
         if excluded_columns:
             print(f"El parámetro 'excluded_columns' fue incluido con los datos: {excluded_columns}")
             table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
 
-    # Agregar VersionId si está definido
         if version_id:
             print(f"El parámetro 'version_id' fue incluido con el valor: {version_id}")
             table_data['VersionId'] = version_id    
                 
-        # if excluded_columns:
-        #     if not isinstance(excluded_columns, (list, tuple)):
-        #         raise ValueError("El parámetro 'excluded_columns' debe ser una lista o una tupla si se proporciona.")
-        #     table_data['ColumnWildcard'] = {'ExcludedColumnNames': excluded_columns}
-
         if not row_filter:
             table_data['RowFilter']['AllRowsWildcard'] = {}
 
         try:
-            # Crea el filtro
-            response = client.create_data_cells_filter(
+            response = self.lakeformation.create_data_cells_filter(
                 TableData=table_data
             )
             print(f"Filtro '{filter_name}' creado exitosamente: {response}")
@@ -250,8 +221,40 @@ class Permissions:
             return None
 
 
+
+    def grant_permissions_data_filter(self, principal_arn, catalog_id, filter_name, database_name, table_name, permissions, permissions_with_grant_option):
+        
+        try:
+            resource = {
+                'TableWithColumns': {
+                    'CatalogId': catalog_id,
+                    'DatabaseName': database_name,
+                    'Name': table_name,
+                    'ColumnWildcard': {}, 
+                    'DataCellsFilter': {
+                        'TableCatalogId': catalog_id,
+                        'DatabaseName': database_name,
+                        'TableName': table_name,
+                        'Name': filter_name
+                    }
+                }
+            }
+            
+            response = self.lakeformation.grant_permissions(
+                Principal={'DataLakePrincipalIdentifier': principal_arn},
+                Resource=resource,
+                Permissions=permissions,  
+                PermissionsWithGrantOption=permissions_with_grant_option
+            )
+        
+            print(f"Filtro '{filter_name}' creado exitosamente: {response}")
+            
+        except Exception as e:
+            print(f"Error creando el filtro '{filter_name}': {e}")
+            return {"statusCode": 500, "error": str(e)}
+            
+
 if __name__ == '__main__':
-    # Parámetros de configuración
     path_file = os.getenv("PATH_FILE")   
     permissions = Permissions(path_file)
     
@@ -276,10 +279,12 @@ if __name__ == '__main__':
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
-        elif flag == 'assign_lf_tags':
+            
+        elif flag == 'assign_lf_tags_columns':
             print("----------------------------")
-            print("assign_lf_tags")
+            print("assign_lf_tags_columns")
             print("----------------------------")
+            
             response = permissions.assign_lf_tags_columns(config.get("DATABASE_NAME"), 
                                                 config.get("TABLE_NAME"), 
                                                 config.get("CATALOG_ID"), 
@@ -288,6 +293,20 @@ if __name__ == '__main__':
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
+            
+        elif flag == 'assign_lf_tags_tb_db':
+            print("----------------------------")
+            print("assign_lf_tags_tb_db")
+            print("----------------------------")
+            
+            response = permissions.assign_lf_tags(config.get("DATABASE_NAME"), 
+                                                config.get("TABLE_NAME"), 
+                                                config.get("CATALOG_ID"), 
+                                                config.get("ASSIGN_TAG"))
+            print("----------------------------")
+            print(f"RESPONSE: {response}")
+            print("----------------------------")
+            
         elif flag == 'grant_permissions':
             print("----------------------------")
             print("grant_permissions")
@@ -310,6 +329,19 @@ if __name__ == '__main__':
                                                             config.get("COLUMNS_NAME"),
                                                             config.get("EXCLUDED_COLUMNS"),
                                                             config.get("VERSION_ID"))
+        elif flag == 'grant_permissions_data_filter':
+            print("----------------------------")
+            print("grant_permissions_data_filter")
+            print("----------------------------")
+            response = permissions.grant_permissions_data_filter(config.get("PRINCIPAL_ARN"),
+                                                            config.get("CATALOG_ID"),
+                                                            config.get("FILTER_NAME"),
+                                                            config.get("DATABASE_NAME"),
+                                                            config.get("TABLE_NAME"),
+                                                            config.get("PERMISSIONS"),
+                                                            config.get("PERMISSIONS_WITH_GRANT_OPTION")
+                                                            )       
+           
         else:
             response = 'Invalid flag_permissions'
             print("----------------------------")
