@@ -222,7 +222,7 @@ class Permissions:
 
 
 
-    def grant_permissions_data_filter(self, principal_arn, catalog_id, filter_name, database_name, table_name, permissions, permissions_with_grant_option):
+    def grant_permissions_data_filter(self, principal_arn, catalog_id, filter_name, database_name, table_name, permissions, permissions_with_grant_option, action_flag):
         
         try:
             resource = {
@@ -234,18 +234,27 @@ class Permissions:
                 }
             }
             
-            response = self.lakeformation.grant_permissions(
-                Principal={'DataLakePrincipalIdentifier': principal_arn},
-                Resource=resource,
-                Permissions=permissions,  
-                PermissionsWithGrantOption=permissions_with_grant_option
-            )
-        
-            print(f"Filtro '{filter_name}' creado exitosamente: {response}")
+            if action_flag=='grant':
+                response = self.lakeformation.grant_permissions(
+                    Principal={'DataLakePrincipalIdentifier': principal_arn},
+                    Resource=resource,
+                    Permissions=permissions,  
+                    PermissionsWithGrantOption=permissions_with_grant_option
+                )
+                print(f"Filtro '{filter_name}' creado exitosamente: {response}")
+            elif action_flag=='revoke':
+                response = self.lakeformation.revoke_permissions(
+                    Principal={'DataLakePrincipalIdentifier': principal_arn},
+                    Resource=resource,
+                    Permissions=permissions,  
+                    PermissionsWithGrantOption=permissions_with_grant_option
+                )
+                print(f"Filtro '{filter_name}' revocado exitosamente: {response}")
             
         except Exception as e:
             print(f"Error creando el filtro '{filter_name}': {e}")
             return {"statusCode": 500, "error": str(e)}
+    
             
 
 if __name__ == '__main__':
@@ -348,7 +357,8 @@ if __name__ == '__main__':
                 config.get("DATABASE_NAME"),
                 config.get("TABLE_NAME"),
                 config.get("PERMISSIONS"),
-                config.get("PERMISSIONS_WITH_GRANT_OPTION")
+                config.get("PERMISSIONS_WITH_GRANT_OPTION"),
+                config.get("ACTION")
             )
         else:
             response = 'Invalid flag_permissions'
