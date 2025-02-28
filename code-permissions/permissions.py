@@ -226,17 +226,11 @@ class Permissions:
         
         try:
             resource = {
-                'TableWithColumns': {
-                    'CatalogId': catalog_id,
+                'DataCellsFilter': {
+                    'TableCatalogId': catalog_id,
                     'DatabaseName': database_name,
-                    'Name': table_name,
-                    'ColumnWildcard': {}, 
-                    'DataCellsFilter': {
-                        'TableCatalogId': catalog_id,
-                        'DatabaseName': database_name,
-                        'TableName': table_name,
-                        'Name': filter_name
-                    }
+                    'TableName': table_name,
+                    'Name': filter_name
                 }
             }
             
@@ -275,7 +269,10 @@ if __name__ == '__main__':
             print("----------------------------")
             print("create_lf_tags")
             print("----------------------------")
-            response = permissions.create_lf_tags(config.get("TAG_KEY"), config.get("TAG_VALUES"))
+            response = permissions.create_lf_tags(
+                config.get("TAG_KEY"), 
+                config.get("TAG_VALUES")
+            )
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
@@ -285,11 +282,13 @@ if __name__ == '__main__':
             print("assign_lf_tags_columns")
             print("----------------------------")
             
-            response = permissions.assign_lf_tags_columns(config.get("DATABASE_NAME"), 
-                                                config.get("TABLE_NAME"), 
-                                                config.get("CATALOG_ID"), 
-                                                config.get("ASSIGN_TAG"),
-                                                config.get("COLUMN_NAME"))
+            response = permissions.assign_lf_tags_columns(
+                config.get("DATABASE_NAME"), 
+                config.get("TABLE_NAME"), 
+                config.get("CATALOG_ID"), 
+                config.get("ASSIGN_TAG"),
+                config.get("COLUMN_NAME")
+            )
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
@@ -299,10 +298,12 @@ if __name__ == '__main__':
             print("assign_lf_tags_tb_db")
             print("----------------------------")
             
-            response = permissions.assign_lf_tags(config.get("DATABASE_NAME"), 
-                                                config.get("TABLE_NAME"), 
-                                                config.get("CATALOG_ID"), 
-                                                config.get("ASSIGN_TAG"))
+            response = permissions.assign_lf_tags(
+                config.get("DATABASE_NAME"), 
+                config.get("TABLE_NAME"), 
+                config.get("CATALOG_ID"), 
+                config.get("ASSIGN_TAG")
+            )
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
@@ -311,9 +312,14 @@ if __name__ == '__main__':
             print("----------------------------")
             print("grant_permissions")
             print("----------------------------")
-            response = permissions.grant_permissions(config.get("ROLE_ARN"), config.get("LF_TAGS"), 
-                                              config.get("PERMISSIONS"), config.get("PERMISSIONS_WITH_GRANT_OPTION"), 
-                                              config.get("RESOURCE_TYPE"), config.get("CATALOG_ID"))
+            response = permissions.grant_permissions(
+                config.get("ROLE_ARN"), 
+                config.get("LF_TAGS"), 
+                config.get("PERMISSIONS"), 
+                config.get("PERMISSIONS_WITH_GRANT_OPTION"), 
+                config.get("RESOURCE_TYPE"),
+                config.get("CATALOG_ID")
+            )
             print("----------------------------")
             print(f"RESPONSE: {response}")
             print("----------------------------")
@@ -321,27 +327,29 @@ if __name__ == '__main__':
             print("----------------------------")
             print("data_filters")
             print("----------------------------")
-            response = permissions.create_data_cells_filter(config.get("CATALOG_ID"),
-                                                            config.get("DATABASE_NAME"),
-                                                            config.get("TABLE_NAME"),
-                                                            config.get("FILTER_NAME"),
-                                                            config.get("ROW_FILTER"),
-                                                            config.get("COLUMNS_NAME"),
-                                                            config.get("EXCLUDED_COLUMNS"),
-                                                            config.get("VERSION_ID"))
+            response = permissions.create_data_cells_filter(
+                config.get("CATALOG_ID"),
+                config.get("DATABASE_NAME"),
+                config.get("TABLE_NAME"),
+                config.get("FILTER_NAME"),
+                config.get("ROW_FILTER"),
+                config.get("COLUMNS_NAME"),
+                config.get("EXCLUDED_COLUMNS"),
+                config.get("VERSION_ID")
+            )
         elif flag == 'grant_permissions_data_filter':
             print("----------------------------")
             print("grant_permissions_data_filter")
             print("----------------------------")
-            response = permissions.grant_permissions_data_filter(config.get("PRINCIPAL_ARN"),
-                                                            config.get("CATALOG_ID"),
-                                                            config.get("FILTER_NAME"),
-                                                            config.get("DATABASE_NAME"),
-                                                            config.get("TABLE_NAME"),
-                                                            config.get("PERMISSIONS"),
-                                                            config.get("PERMISSIONS_WITH_GRANT_OPTION")
-                                                            )       
-           
+            response = permissions.grant_permissions_data_filter(
+                config.get("ROLE_ARN"),
+                config.get("CATALOG_ID"),
+                config.get("FILTER_NAME"),
+                config.get("DATABASE_NAME"),
+                config.get("TABLE_NAME"),
+                config.get("PERMISSIONS"),
+                config.get("PERMISSIONS_WITH_GRANT_OPTION")
+            )
         else:
             response = 'Invalid flag_permissions'
             print("----------------------------")
