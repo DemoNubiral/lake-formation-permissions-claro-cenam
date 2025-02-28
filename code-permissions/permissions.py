@@ -10,25 +10,36 @@ class Permissions:
         self.path_dir = path_dir
         self.lakeformation = boto3.client('lakeformation')
 
-    def grant_permissions(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, catalog_id):
+    def grant_permissions(self, role_arn, lf_tags, permissions, permissions_with_grant_option, resource_type, catalog_id, action_flag):
         try:
+            resource={
+                'LFTagPolicy': {
+                    'CatalogId': catalog_id,  
+                    'ResourceType': resource_type ,     
+                    'Expression': lf_tags
+                }
+            }
             # Crea la política para otorgar permisos utilizando LF-tags
-            response = self.lakeformation.grant_permissions(
-                Principal={
-                    'DataLakePrincipalIdentifier': role_arn
-                },
-                Resource={
-                    'LFTagPolicy': {
-                        'CatalogId': catalog_id,  
-                        'ResourceType': resource_type ,     
-                        'Expression': lf_tags
-                    }
-                },
-                Permissions=permissions,
-                PermissionsWithGrantOption=permissions_with_grant_option
-            )
-
-            return response
+            if action_flag=='grant':
+                response = self.lakeformation.grant_permissions(
+                    Principal={
+                        'DataLakePrincipalIdentifier': role_arn
+                    },
+                    Resource=resource,
+                    Permissions=permissions,
+                    PermissionsWithGrantOption=permissions_with_grant_option
+                )
+                print(f"LF-tags otorgado exitosamente: {response}")
+            elif action_flag=='revoke':
+                response = self.lakeformation.revoke_permissions(
+                    Principal={
+                        'DataLakePrincipalIdentifier': role_arn
+                    },
+                    Resource=resource,
+                    Permissions=permissions,
+                    PermissionsWithGrantOption=permissions_with_grant_option
+                )
+                print(f"LF-tags revocado exitosamente: {response}")
 
         except Exception as e:
             return str(e)
@@ -327,7 +338,8 @@ if __name__ == '__main__':
                 config.get("PERMISSIONS"), 
                 config.get("PERMISSIONS_WITH_GRANT_OPTION"), 
                 config.get("RESOURCE_TYPE"),
-                config.get("CATALOG_ID")
+                config.get("CATALOG_ID"),
+                config.get("ACTION")
             )
             print("----------------------------")
             print(f"RESPONSE: {response}")
