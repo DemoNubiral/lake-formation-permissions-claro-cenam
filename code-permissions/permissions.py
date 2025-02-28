@@ -252,7 +252,7 @@ class Permissions:
                 print(f"Filtro '{filter_name}' revocado exitosamente: {response}")
             
         except Exception as e:
-            print(f"Error creando el filtro '{filter_name}': {e}")
+            print(f"Error en la acción {action_flag} del filtro '{filter_name}': {e}")
             return {"statusCode": 500, "error": str(e)}
     
             
