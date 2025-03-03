@@ -40,7 +40,6 @@ class Permissions:
                     PermissionsWithGrantOption=permissions_with_grant_option
                 )
                 print(f"LF-tags revocado exitosamente: {response}")
-
         except Exception as e:
             return str(e)
         
@@ -293,9 +292,6 @@ if __name__ == '__main__':
                 config.get("TAG_KEY"), 
                 config.get("TAG_VALUES")
             )
-            print("----------------------------")
-            print(f"RESPONSE: {response}")
-            print("----------------------------")
             
         elif flag == 'assign_lf_tags_columns':
             print("----------------------------")
@@ -309,9 +305,6 @@ if __name__ == '__main__':
                 config.get("ASSIGN_TAG"),
                 config.get("COLUMN_NAME")
             )
-            print("----------------------------")
-            print(f"RESPONSE: {response}")
-            print("----------------------------")
             
         elif flag == 'assign_lf_tags_tb_db':
             print("----------------------------")
@@ -324,9 +317,6 @@ if __name__ == '__main__':
                 config.get("CATALOG_ID"), 
                 config.get("ASSIGN_TAG")
             )
-            print("----------------------------")
-            print(f"RESPONSE: {response}")
-            print("----------------------------")
             
         elif flag == 'grant_permissions':
             print("----------------------------")
@@ -341,9 +331,7 @@ if __name__ == '__main__':
                 config.get("CATALOG_ID"),
                 config.get("ACTION")
             )
-            print("----------------------------")
-            print(f"RESPONSE: {response}")
-            print("----------------------------")
+            
         elif flag == 'data_filters':
             print("----------------------------")
             print("data_filters")
@@ -374,9 +362,6 @@ if __name__ == '__main__':
             )
         else:
             response = 'Invalid flag_permissions'
-            print("----------------------------")
-            print(response)
-            print("----------------------------")
             exit(1)
 
         print("----------------------------")
