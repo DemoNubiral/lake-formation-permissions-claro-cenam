@@ -105,14 +105,13 @@ El script está diseñado para conceder o revocar permisos en Lake Formation bas
 
 Cada una de las siguientes carpetas contiene archivos `.env` con variables necesarias para definir permisos en Lake Formation:
 
-* `create-lf-tags/:` Contiene archivos `.env` que definen las etiquetas LF-Tags a ser creadas en Lake Formation.
+* `create-lf-tags/:` Contiene archivos `.env` que definen las etiquetas LF-Tags a ser creadas en Lake Formation. Las variables asignadas dentro del archivo `.env` son: TAG_KEY (tipo dato: string), TAG_VALUES (tipo dato: lista), FLAG_PERMISSIONS (tipo dato: string).
 
-* `assign-lf-tags/:` Define qué etiquetas deben asignarse a qué recursos en AWS Lake Formation.
+* `assign-lf-tags/:` Define qué etiquetas deben asignarse a qué recursos en AWS Lake Formation. Las variables asignadas dentro del archivo `.env` son: CATALOG_ID (tipo dato: string), DATABASE_NAME (tipo dato: string), TABLE_NAME (tipo dato: string), TAG_KEY (tipo dato: string), TAG_VALUES (tipo dato: lista), FLAG_PERMISSIONS (tipo dato: string).
 
-* `data-filters/:` Contiene configuraciones de filtros de datos para restringir el acceso a nivel de filas o columnas en las tablas de Glue Data Catalog.
+* `data-filters/:` Contiene configuraciones de filtros de datos para restringir el acceso a nivel de filas o columnas en las tablas de Glue Data Catalog. Las variables asignadas dentro del archivo `.env` son: CATALOG_ID (tipo dato: string), DATABASE_NAME (tipo dato: string), TABLE_NAME (tipo dato: string), FILTER_NAME (tipo dato: string), ROW_FILTER (tipo dato: string), COLUMNS_NAME (tipo dato: lista), EXCLUDED_COLUMNS (tipo dato: lista), VERSION_ID (tipo dato: None), FLAG_PERMISSIONS (tipo dato: string).  
 
 * `database-permissions/:` Especifica los permisos a nivel de bases de datos en AWS Lake Formation.
 
-* `table-permissions/:` Define los permisos específicos para tablas dentro de las bases de datos registradas en AWS Lake Formation.
+* `table-permissions/:` Define los permisos específicos para tablas dentro de las bases de datos registradas en AWS Lake Formation. Las variables asignadas dentro del archivo `.env` son: ROLE_ARN (tipo dato: string), CATALOG_ID (tipo dato: string), LF_TAGS (tipo dato: lista de diccionarios), PERMISSIONS (tipo dato: string), PERMISSIONS_WITH_GRANT_OPTION (tipo dato: string), RESOURCE_TYPE (tipo dato: string), FLAG_PERMISSIONS (tipo dato: string).
 
-Cada archivo `.env` dentro de estas carpetas contiene variables que son utilizadas por el script de permisos para ejecutar las configuraciones de acceso de manera dinámica.
